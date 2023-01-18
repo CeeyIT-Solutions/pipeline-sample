@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Validate') {
+            steps {
+                echo 'Building..'
+		sh '/opt/maven/bin/mvn validate'
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'Testing..'
+		sh '/opt/maven/bin/mvn package'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Deploying....'
+		sh '/opt/maven/bin/mvn test'
+            }
+        }
+    }
+}
