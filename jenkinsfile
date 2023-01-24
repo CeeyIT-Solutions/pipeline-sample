@@ -2,22 +2,23 @@ pipeline {
     agent any
 
     stages {
-        stage('Validate') {
+        stage('build') {
             steps {
                 echo 'Building..'
-		sh '/usr/share/maven/bin/mvn validate'
-            }
-        }
-        stage('Build') {
-            steps {
-                echo 'Testing..'
 		sh '/usr/share/maven/bin/mvn package'
             }
         }
-        stage('Test') {
+        stage('test') {
+            steps {
+                echo 'Building..'
+		sh '/usr/share/maven/bin/mvn test'
+            }
+        }
+        stage('deploy') {
             steps {
                 echo 'Deploying....'
-		sh '/usr/share/maven/bin/mvn test'
+		ssh agent(['Deploy_user']) {
+		sh "scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/jenkins-pipe/target/webapp-0.2.war centos@34.204.81.188:/home/centos
             }
         }
     }
